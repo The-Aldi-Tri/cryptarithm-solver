@@ -6,7 +6,9 @@ const validatePayload = (schema) => {
     });
 
     if (validationResult.error) {
-      return res.status(422).json({ error: validationResult.error });
+      return res
+        .status(422)
+        .json({ error: validationResult.error.details[0].message });
     }
 
     next();

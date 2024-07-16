@@ -22,14 +22,15 @@ app.use(express.json()); // Parse JSON bodies
 app.use(helmet());
 
 // Handle cross-origin requests
-if (process.env.NODE_ENV === "development") {
-  app.use(
-    cors({
-      origin: ["http://localhost:3000"], // Allow requests from specific origin
-      credentials: true, // Allow credentials (cookies, authorization headers)
-    })
-  );
-}
+app.use(cors());
+// if (process.env.NODE_ENV === "development") {
+//   app.use(
+//     cors({
+//       origin: ["http://localhost:3000"], // Allow requests from specific origin
+//       credentials: true, // Allow credentials (cookies, authorization headers)
+//     })
+//   );
+// }
 
 // Apply rate limit to api routes
 app.use("/api", apiLimiter);

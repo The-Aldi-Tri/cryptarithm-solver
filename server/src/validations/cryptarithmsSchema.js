@@ -16,7 +16,7 @@ let pattern = /^([A-Z]+(?: [+-] [A-Z]+)*)(?: = ([A-Z]+(?: [+-] [A-Z]+)*))?$/;
 //     $/: Asserts position at the end of the string.
 
 const cryptarithmPayloadSchema = Joi.object({
-  equation: Joi.string().pattern(pattern, "equation"),
+  equation: Joi.string().pattern(pattern, "equation").required(),
 });
 
 module.exports = { cryptarithmPayloadSchema };

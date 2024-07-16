@@ -6,7 +6,7 @@ const solve = async (req, res, next) => {
 
   try {
     // Initialize an empty array to store valid solution later
-    let solutions = [];
+    const solutions = [];
 
     // Extract unique letters from the equation
     const uniqueLetters = Array.from(new Set(equation.match(/[A-Z]/g))).sort();
@@ -21,11 +21,10 @@ const solve = async (req, res, next) => {
     // Generate permutations of digits for unique letters. Example for 3-letter equation: ["012", "123", ...]
     const permutations = generateNDigitPermutations(uniqueLetters.length);
 
-    // Initialize an empty map object to store mappings from letters to digits
-    const map = {};
-
     // Iterate over each permutation
     permutations.forEach((perm) => {
+      // Initialize an empty map object to store mappings from letters to digits
+      const map = {};
       // Map each unique letter to a digit from the current permutation.
       // Example: {'A': "0", 'B': "1", 'C': "2"}
       for (let i in perm) {
@@ -70,7 +69,7 @@ const solveNoLeadingZero = async (req, res, next) => {
 
   try {
     // Initialize an empty array to store valid solution later
-    let solutions = [];
+    const solutions = [];
 
     // Extract unique leading letters. Example: "ADA + DI = DIA" => leading letters: A,D
     const expressions = equation.split(/=|\+|-/);
@@ -93,11 +92,11 @@ const solveNoLeadingZero = async (req, res, next) => {
     // Generate permutations of digits for unique letters. Example for 3-letter equation: ["012", "123", ...]
     const permutations = generateNDigitPermutations(uniqueLetters.length);
 
-    // Initialize an empty map object to store mappings from letters to digits
-    const map = {};
-
     // Iterate over each permutation
     permutations.forEach((perm) => {
+      // Initialize an empty map object to store mappings from letters to digits
+      const map = {};
+
       // Map each unique letter to a digit from the current permutation.
       // Example: {'A': "0", 'B': "1", 'C': "2"}
       for (let i in perm) {
@@ -119,7 +118,6 @@ const solveNoLeadingZero = async (req, res, next) => {
 
       // Evaluate and compare the left and right sides of the equation
       if (mathjs.evaluate(leftSide) === mathjs.evaluate(rightSide)) {
-        console.log(map);
         solutions.push(map); // Store the valid solution map
       }
     });
