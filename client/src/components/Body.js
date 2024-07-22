@@ -55,6 +55,18 @@ export default function Body() {
       setSubmitting(true);
       try {
         const equation = Object.values(values).join(" ").toUpperCase();
+        const uniqueLetters = Array.from(
+          new Set(equation.match(/[A-Z]/g))
+        ).sort();
+
+        if (uniqueLetters.length > 10) {
+          return alert(
+            `Not solvable because unique letters are more than 10.\nUnique letters: ${uniqueLetters.join(
+              ", "
+            )}`
+          );
+        }
+
         const response = await axios.post(
           "http://127.0.0.1:3001/cryptarithms",
           { equation }
