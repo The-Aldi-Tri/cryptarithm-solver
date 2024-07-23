@@ -1,40 +1,40 @@
 const mathjs = require("mathjs");
 
 class CryptarihtmService {
-  generateNDigitPermutations(n) {
-    let permutations = [];
+  constructor() {}
+  static async generatePermutations(n) {
+    const numbers = Array.from({ length: 10 }, (_, index) => index); // Array of numbers 0 to 9
 
-    function generatePermutations(currentPermutation, usedDigits) {
-      if (currentPermutation.length === n) {
-        permutations.push(currentPermutation.join(""));
-        return;
+    // Helper function to generate permutations using Heap's algorithm
+    function permute(current, start) {
+      if (start === n) {
+        return [current];
       }
 
-      for (let digit = 0; digit <= 9; digit++) {
-        // Check if digit is not used yet
-        if (!usedDigits[digit]) {
-          usedDigits[digit] = true; // Mark digit as used
-          currentPermutation.push(digit);
-          generatePermutations(currentPermutation, usedDigits);
-          currentPermutation.pop();
-          usedDigits[digit] = false; // Un-mark digit for backtracking
-        }
+      let permutations = [];
+
+      for (let i = start; i < numbers.length; i++) {
+        // Swap current element with element at index 'start'
+        [numbers[start], numbers[i]] = [numbers[i], numbers[start]];
+        permutations = permutations.concat(
+          permute(current.concat(numbers[start]), start + 1)
+        );
+        // Undo the swap for backtracking
+        [numbers[start], numbers[i]] = [numbers[i], numbers[start]];
       }
+
+      return permutations;
     }
 
-    generatePermutations([], {});
-
-    // Pad permutations with leading zeros to ensure same length
-    permutations = permutations.map((num) => num.padStart(n, "0"));
-
-    return permutations;
+    // Start permutations generation with an empty initial permutation and start index 0
+    return permute([], 0).map((perm) => perm.join(""));
   }
 
-  getUniqueLetters(equation) {
+  static async getUniqueLetters(equation) {
     return Array.from(new Set(equation.match(/[A-Z]/g))).sort();
   }
 
-  getUniqueLeadingLetters(equation) {
+  static async getUniqueLeadingLetters(equation) {
     const expressions = equation.split(/[-+=]/);
 
     let uniqueLeadingLetters = new Set();
@@ -45,39 +45,41 @@ class CryptarihtmService {
     return Array.from(uniqueLeadingLetters);
   }
 
-  solve(equation, allowLeadingZero = true) {
+  static async solve(equation, allowLeadingZero = true) {
     // Initialize an array to store valid solutions
     const solutions = [];
 
     // Extract unique letters from the equation. Example: "ADA + DI = DIA" => A,D,I
-    const uniqueLetters = this.getUniqueLetters(equation);
+    const uniqueLetters = await this.getUniqueLetters(equation);
+
+    const n = uniqueLetters.length;
 
     // Check if there are more than 10 unique letters (not solvable)
-    if (uniqueLetters.length > 10) {
+    if (n > 10) {
       return { error: "Not solvable because unique letters are more than 10" };
     }
 
     // Extract unique leading letters (first letter in word). Example: "ADA + DI = DIA" => A,D
     let uniqueLeadingLetters;
     if (!allowLeadingZero) {
-      uniqueLeadingLetters = this.getUniqueLeadingLetters(equation);
+      uniqueLeadingLetters = await this.getUniqueLeadingLetters(equation);
     }
 
     // Generate permutations of digits for unique letters. Example for 3-letter equation: ["012", "123", ...]
-    const permutations = this.generateNDigitPermutations(uniqueLetters.length);
+    const permutations = await this.generatePermutations(n);
 
     // Iterate over each permutation
-    for (let perm of permutations) {
+    permutationsLoop: for (let perm of permutations) {
       // Initialize an empty map object to store mappings from letters to digits
       const map = {};
 
       // Map each unique letter to a digit from the current permutation.
       // Example: {'A': "0", 'D': "1", 'I': "2"}
-      for (let i in perm) {
+      for (let i in perm.split("")) {
         //Check if leading letter map to zero
         if (perm[i] == 0 && !allowLeadingZero) {
           if (uniqueLeadingLetters.includes(uniqueLetters[i])) {
-            continue; //Skip iteration if so
+            continue permutationsLoop; //Skip iteration if so
           }
         }
         map[uniqueLetters[i]] = perm[i];

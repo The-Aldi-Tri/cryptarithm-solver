@@ -1,31 +1,45 @@
+const asyncWrapper = require("../utils/asyncWrapper");
 const CryptarithmService = require("../services/CryptarithmService");
+const cacheService = require("../services/redis/CacheService");
 
-const solve = async (req, res, next) => {
-  const { equation } = req.body;
+const solve = asyncWrapper(async (req, res) => {
+  const { equation, allowLeadingZero } = req.body;
 
-  const cryptarithmService = new CryptarithmService();
-  try {
-    const { solutions, error } = cryptarithmService.solve(equation);
+  let isCached = true;
+  let result;
 
-    if (error) {
-      return res.status(400).json({ error });
-    }
+  result = JSON.parse(
+    await cacheService.get(`solutions:${equation}-${allowLeadingZero}`)
+  );
 
-    // If no solutions were found, return a response indicating so
-    if (solutions.length === 0) {
-      return res.status(200).json({ result: "No solution found" });
-    }
-
-    // Return a response with solutions
-    return res.status(200).json({
-      data: {
-        solutions,
-      },
-    });
-  } catch (e) {
-    console.log(e);
-    next(e);
+  if (result === null) {
+    result = await CryptarithmService.solve(equation, allowLeadingZero);
+    await cacheService.set(
+      `solutions:${equation}-${allowLeadingZero}`,
+      JSON.stringify(result)
+    );
+    isCached = false;
   }
-};
+
+  if (isCached) {
+    res.set("X-Data-Source", "cache");
+  }
+
+  if (result.error) {
+    return res.status(400).json({ error: result.error });
+  }
+
+  // If no solutions were found, return a response indicating so
+  if (result.solutions.length === 0) {
+    return res.status(200).json({ result: "No solution found" });
+  }
+
+  // Return a response with solutions
+  return res.status(200).json({
+    data: {
+      solutions: result.solutions,
+    },
+  });
+});
 
 module.exports = { solve };

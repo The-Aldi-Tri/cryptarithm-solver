@@ -3,12 +3,12 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 
+// Config
+const config = require("./configs/config");
+
 // Middlewares
 const apiLimiter = require("./middlewares/apiLimiter");
 const errorHandler = require("./middlewares/errorHandler");
-
-// Config
-const config = require("./config/config");
 
 // Routes
 const cryptarithmRouter = require("./routes/cryptarithmsRoutes");

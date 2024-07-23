@@ -13,7 +13,13 @@ import Select from "@mui/material/Select";
 import Divider from "@mui/material/Divider";
 import { Button } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import { CardContent, Typography, Grid } from "@mui/material";
+import {
+  CardContent,
+  Typography,
+  Grid,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 
 const createAlphabeticSchema = (errorMessage) =>
   yup
@@ -41,6 +47,7 @@ export default function Body() {
   const [solved, setSolved] = React.useState(false);
   const [equation, setEquation] = React.useState("");
   const [solutions, setSolutions] = React.useState([]);
+  const [allowLeadingZero, setAllowLeadingZero] = React.useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -69,7 +76,7 @@ export default function Body() {
 
         const response = await axios.post(
           "http://127.0.0.1:3001/cryptarithms",
-          { equation }
+          { equation, allowLeadingZero }
         );
         setSolved(true);
         setSolutions(response.data.data?.solutions);
@@ -84,9 +91,9 @@ export default function Body() {
   return (
     <Container
       component={Paper}
-      elevation={5}
+      elevation={3}
       maxWidth="md"
-      sx={{ minHeight: "100vh" }}
+      sx={{ flexGrow: 1, pt: "30px" }}
     >
       <Box
         component="form"
@@ -95,7 +102,6 @@ export default function Body() {
         sx={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
           m: "auto",
         }}
       >
@@ -109,27 +115,13 @@ export default function Body() {
           onBlur={formik.handleBlur}
           onChange={formik.handleChange}
           variant="outlined"
-          margin="normal"
+          margin="dense"
           fullWidth
-          inputProps={{ style: { textTransform: "uppercase" } }}
+          inputProps={{
+            style: { textTransform: "uppercase", textAlign: "right" },
+          }}
         />
-        <FormControl
-          sx={{ minWidth: 75 }}
-          size="small"
-          fullWidth
-          margin="normal"
-        >
-          <InputLabel>Operator</InputLabel>
-          <Select
-            label="Operator"
-            name="operator"
-            value={formik.values.operator}
-            onChange={formik.handleChange}
-          >
-            <MenuItem value={"+"}> + </MenuItem>
-            <MenuItem value={"-"}> - </MenuItem>
-          </Select>
-        </FormControl>
+
         <TextField
           label="Operand 2"
           name="operand2"
@@ -140,11 +132,36 @@ export default function Body() {
           onBlur={formik.handleBlur}
           onChange={formik.handleChange}
           variant="outlined"
-          margin="normal"
+          margin="dense"
           fullWidth
-          inputProps={{ style: { textTransform: "uppercase" } }}
+          inputProps={{
+            style: { textTransform: "uppercase", textAlign: "right" },
+          }}
         />
-        <Divider>=</Divider>
+        <div style={{ display: "flex" }}>
+          <FormControl sx={{ minWidth: 75 }} size="small" margin="dense">
+            <InputLabel>Operator</InputLabel>
+            <Select
+              label="Operator"
+              name="operator"
+              value={formik.values.operator}
+              onChange={formik.handleChange}
+            >
+              <MenuItem value={"+"}> + </MenuItem>
+              <MenuItem value={"-"}> - </MenuItem>
+            </Select>
+          </FormControl>
+          <Divider
+            orientation="horizontal"
+            flexItem
+            style={{
+              margin: "auto",
+              marginLeft: "5px",
+              flexGrow: 1,
+              borderBottom: "2px solid #000",
+            }}
+          />
+        </div>
         <TextField
           label="Result"
           name="result"
@@ -155,9 +172,21 @@ export default function Body() {
           onBlur={formik.handleBlur}
           onChange={formik.handleChange}
           variant="outlined"
-          margin="normal"
+          margin="dense"
           fullWidth
-          inputProps={{ style: { textTransform: "uppercase" } }}
+          inputProps={{
+            style: { textTransform: "uppercase", textAlign: "right" },
+          }}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              value={allowLeadingZero}
+              onClick={() => setAllowLeadingZero((prev) => !prev)}
+            />
+          }
+          label="Allow Leading Zero"
+          name="leadingZero"
         />
         <Button
           type="submit"

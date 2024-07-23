@@ -17,6 +17,7 @@ let pattern = /^([A-Z]+(?: [+-] [A-Z]+)*)(?: = ([A-Z]+(?: [+-] [A-Z]+)*))?$/;
 
 const cryptarithmPayloadSchema = Joi.object({
   equation: Joi.string().pattern(pattern, "equation").required(),
+  allowLeadingZero: Joi.boolean().required(),
 });
 
 module.exports = { cryptarithmPayloadSchema };

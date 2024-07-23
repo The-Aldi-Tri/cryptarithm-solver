@@ -1,0 +1,30 @@
+version: "3.8"
+
+name: Cryptarithm-Solver
+services:
+  devcontainer:
+    image: mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm
+    volumes:
+      - ../..:/workspaces:cached
+    command: sleep infinity
+    networks:
+      - my-network
+
+  redis:
+    image: redis:7.2.5-bookworm
+    command:
+      [
+        "redis-server",
+        "--maxmemory",
+        "250mb",
+        "--maxmemory-policy",
+        "allkeys-lfu",
+      ]
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    networks:
+      - my-network
+
+networks:
+  my-network:

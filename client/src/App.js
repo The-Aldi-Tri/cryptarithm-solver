@@ -1,16 +1,14 @@
-import Box from "@mui/material/Box";
-
 import Header from "./components/Header";
 import Body from "./components/Body";
 import Footer from "./components/Footer";
 
 function App() {
   return (
-    <Box>
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <Header />
       <Body />
       <Footer />
-    </Box>
+    </div>
   );
 }
 
