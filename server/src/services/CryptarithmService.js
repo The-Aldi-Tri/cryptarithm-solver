@@ -27,7 +27,7 @@ class CryptarihtmService {
     }
 
     // Start permutations generation with an empty initial permutation and start index 0
-    return permute([], 0).map((perm) => perm.join(""));
+    return permute([], 0);
   }
 
   static async getUniqueLetters(equation) {
@@ -66,7 +66,9 @@ class CryptarihtmService {
     }
 
     // Generate permutations of digits for unique letters. Example for 3-letter equation: ["012", "123", ...]
-    const permutations = await this.generatePermutations(n);
+    const permutations = (await this.generatePermutations(n)).map((perm) =>
+      perm.join("")
+    );
 
     // Iterate over each permutation
     permutationsLoop: for (let perm of permutations) {

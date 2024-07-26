@@ -1,6 +1,8 @@
 const asyncWrapper = require("../utils/asyncWrapper");
 const CryptarithmService = require("../services/CryptarithmService");
-const cacheService = require("../services/redis/CacheService");
+const CacheService = require("../services/redis/CacheService");
+
+const cacheService = new CacheService();
 
 const solve = asyncWrapper(async (req, res) => {
   const { equation, allowLeadingZero } = req.body;

@@ -1,9 +1,14 @@
 import globals from "globals";
 import pluginJs from "@eslint/js";
 
-
 export default [
-  {files: ["**/*.js"], languageOptions: {sourceType: "commonjs"}},
-  {languageOptions: { globals: globals.node }},
+  { files: ["**/*.js"], languageOptions: { sourceType: "commonjs" } },
+  { languageOptions: { globals: globals.node } },
   pluginJs.configs.recommended,
+  {
+    plugins: ["jest"],
+    env: {
+      jest: true, // Enable Jest environment
+    },
+  },
 ];

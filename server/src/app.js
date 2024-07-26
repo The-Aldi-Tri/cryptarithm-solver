@@ -1,10 +1,6 @@
-require("dotenv").config(); // Load environment variables
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
-
-// Config
-const config = require("./configs/config");
 
 // Middlewares
 const apiLimiter = require("./middlewares/apiLimiter");
@@ -46,9 +42,4 @@ app.use((req, res) => {
 // Handle errors
 app.use(errorHandler);
 
-// Server
-app.listen(config.app.port, config.app.host, () => {
-  console.info(
-    `Server is listening on http://${config.app.host}:${config.app.port}`
-  );
-});
+module.exports = app;
