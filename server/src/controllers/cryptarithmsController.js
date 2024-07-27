@@ -31,10 +31,10 @@ const solve = asyncWrapper(async (req, res) => {
     return res.status(400).json({ error: result.error });
   }
 
-  // If no solutions were found, return a response indicating so
-  if (result.solutions.length === 0) {
-    return res.status(200).json({ result: "No solution found" });
-  }
+  // // If no solutions were found, return a response indicating so
+  // if (result.solutions.length === 0) {
+  //   return res.status(200).json({ result: "No solution found" });
+  // }
 
   // Return a response with solutions
   return res.status(200).json({

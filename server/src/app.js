@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swagger");
 
 // Middlewares
 const apiLimiter = require("./middlewares/apiLimiter");
@@ -29,10 +31,13 @@ app.use(cors());
 // }
 
 // Apply rate limit to api routes
-app.use("/api", apiLimiter);
+app.use("/cryptarithms", apiLimiter);
 
 // Mount routes
 app.use(cryptarithmRouter);
+
+// Serve Swagger documentation
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Middleware to handle invalid/not defined routes
 app.use((req, res) => {
