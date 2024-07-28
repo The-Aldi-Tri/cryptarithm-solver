@@ -3,7 +3,6 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
 import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
@@ -13,13 +12,9 @@ import Select from "@mui/material/Select";
 import Divider from "@mui/material/Divider";
 import { Button } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import {
-  CardContent,
-  Typography,
-  Grid,
-  FormControlLabel,
-  Checkbox,
-} from "@mui/material";
+import { FormControlLabel, Checkbox } from "@mui/material";
+
+import Solutions from "./Solutions";
 
 const createAlphabeticSchema = (errorMessage) =>
   yup
@@ -43,7 +38,7 @@ const schema = yup.object().shape({
   ),
 });
 
-export default function Body() {
+const Body = () => {
   const [solved, setSolved] = React.useState(false);
   const [equation, setEquation] = React.useState("");
   const [solutions, setSolutions] = React.useState([]);
@@ -89,12 +84,7 @@ export default function Body() {
     },
   });
   return (
-    <Container
-      component={Paper}
-      elevation={3}
-      maxWidth="md"
-      sx={{ flexGrow: 1, pt: "30px" }}
-    >
+    <Container maxWidth="md" sx={{ flexGrow: 1, pt: "30px" }}>
       <Box
         component="form"
         onSubmit={formik.handleSubmit}
@@ -199,44 +189,9 @@ export default function Body() {
           {formik.isSubmitting ? "Solving..." : "Solve"}
         </Button>
       </Box>
-      <Box
-        maxWidth="sm"
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          m: "auto",
-          mt: "20px",
-        }}
-      >
-        <Grid container spacing={0.5}>
-          {!solved ? null : !solutions ? (
-            <Grid item xs={12} sm={12}>
-              <Typography align="center">No solutions found</Typography>
-            </Grid>
-          ) : (
-            solutions.map((sol, index) => (
-              <Grid item xs={12} sm={6} key={index}>
-                <CardContent>
-                  <Typography sx={{ fontWeight: "bold" }}>
-                    {`Solution ${index + 1}:`}
-                  </Typography>
-                  <Typography>
-                    {Object.entries(sol)
-                      .map(([key, value]) => `${key} = ${value}`)
-                      .join(", ")}
-                  </Typography>
-                  <Typography>{`Equation: ${equation}`}</Typography>
-                  <Typography>{`Substituted: ${equation
-                    .split("")
-                    .map((char) => sol[char] || char)
-                    .join("")}`}</Typography>
-                </CardContent>
-              </Grid>
-            ))
-          )}
-        </Grid>
-      </Box>
+      {!solved ? null : <Solutions solutions={solutions} equation={equation} />}
     </Container>
   );
-}
+};
+
+export default Body;

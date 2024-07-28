@@ -1,16 +1,13 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Container from "@mui/material/Container";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import BugReportIcon from "@mui/icons-material/BugReport";
+import { AppBar, Container, Toolbar, Typography } from "@mui/material";
+import { BugReport } from "@mui/icons-material";
 
-export default function BasicAppBar() {
+const BasicAppBar = () => {
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#3f51b5" }}>
+    <AppBar position="static" sx={{ backgroundColor: "#4A6D7C" }}>
       <Container maxWidth="md">
         <Toolbar>
-          <BugReportIcon
+          <BugReport
             size="large"
             edge="start"
             color="inherit"
@@ -24,4 +21,6 @@ export default function BasicAppBar() {
       </Container>
     </AppBar>
   );
-}
+};
+
+export default BasicAppBar;
