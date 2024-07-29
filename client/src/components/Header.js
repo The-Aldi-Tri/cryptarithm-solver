@@ -5,12 +5,12 @@ import { BugReport } from "@mui/icons-material";
 const BasicAppBar = () => {
   return (
     <AppBar position="static" sx={{ backgroundColor: "#4A6D7C" }}>
-      <Container maxWidth="md">
+      <Container maxWidth="sm" disableGutters>
         <Toolbar>
           <BugReport
             size="large"
-            edge="start"
             color="inherit"
+            edge="start"
             aria-label="icon"
             sx={{ mr: 2 }}
           />
