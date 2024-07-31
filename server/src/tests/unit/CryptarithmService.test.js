@@ -39,7 +39,7 @@ describe("Cryptarithm services - getPermutations", () => {
 
 describe("Cryptarithm services - getUniqueLetters", () => {
   it("should return an array of unique letters [A-Z] from a equation string", async () => {
-    const equationString = "HELLO + WORLD = WONDERFUL";
+    const equationString = "HELLO+WORLD=WONDERFUL";
     const expectedOutput = [
       "H",
       "E",
@@ -59,7 +59,7 @@ describe("Cryptarithm services - getUniqueLetters", () => {
 
 describe("Cryptarithm services - getUniqueLeadingLetters", () => {
   it("should return an array of unique leading letters [A-Z] from a equation string", async () => {
-    const equationString = "HELLO + WORLD = WONDERFUL";
+    const equationString = "HELLO+WORLD=WONDERFUL";
     const expectedOutput = ["H", "W"];
     const result = await CryptarithmService.getUniqueLeadingLetters(
       equationString
@@ -70,7 +70,7 @@ describe("Cryptarithm services - getUniqueLeadingLetters", () => {
 
 describe("Cryptarithm services - solve", () => {
   it("should return not solvable when unique letters > 10", async () => {
-    const equationString = "HELLO + WORLD = WONDERFULLY";
+    const equationString = "HELLO+WORLD=WONDERFULLY";
     const expectedOutput = {
       error: "Not solvable because unique letters are more than 10",
     };
@@ -79,7 +79,7 @@ describe("Cryptarithm services - solve", () => {
   });
 
   it("should return correct solutions - no leading zero", async () => {
-    const equationString = "SEND + MORE = MONEY";
+    const equationString = "SEND+MORE=MONEY";
     const allowLeadingZero = false;
     const expectedOutput = {
       solutions: [
@@ -94,7 +94,7 @@ describe("Cryptarithm services - solve", () => {
   });
 
   it("should return correct solutions - allow leading zero", async () => {
-    const equationString = "SEND + MORE = MONEY";
+    const equationString = "SEND+MORE=MONEY";
     const allowLeadingZero = true;
     const expectedOutput = {
       solutions: [

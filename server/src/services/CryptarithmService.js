@@ -39,7 +39,7 @@ class CryptarihtmService {
 
     let uniqueLeadingLetters = new Set();
     for (let i in expressions) {
-      uniqueLeadingLetters.add(expressions[i].trim()[0]);
+      uniqueLeadingLetters.add(expressions[i][0]);
     }
 
     return Array.from(uniqueLeadingLetters);

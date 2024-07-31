@@ -5,7 +5,8 @@ const CacheService = require("../services/redis/CacheService");
 const cacheService = new CacheService();
 
 const solve = asyncWrapper(async (req, res) => {
-  const { equation, allowLeadingZero } = req.body;
+  const equation = req.body.equation.replace(/\s+/g, "");
+  const allowLeadingZero = req.body.allowLeadingZero;
 
   let isCached = true;
   let result;
