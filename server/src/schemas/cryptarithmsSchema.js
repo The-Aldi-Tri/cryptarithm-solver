@@ -41,7 +41,6 @@ let pattern =
 
 const cryptarithmPayloadSchema = Joi.object({
   equation: Joi.string().pattern(pattern, "equation").required(),
-  allowLeadingZero: Joi.boolean().required(),
 });
 
 module.exports = { cryptarithmPayloadSchema };

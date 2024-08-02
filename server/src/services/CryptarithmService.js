@@ -1,9 +1,10 @@
-const mathjs = require("mathjs");
+const { evaluate } = require("mathjs");
 
-class CryptarihtmService {
+class CryptarithmService {
   constructor() {}
-  static async generatePermutations(n) {
-    const numbers = Array.from({ length: 10 }, (_, index) => index); // Array of numbers 0 to 9
+  generatePermutations(n) {
+    // Array of numbers 0 to 9
+    const numbers = Array.from({ length: 10 }, (_, index) => index);
 
     // Helper function to generate permutations using Heap's algorithm
     function permute(current, start) {
@@ -30,81 +31,68 @@ class CryptarihtmService {
     return permute([], 0);
   }
 
-  static async getUniqueLetters(equation) {
-    return Array.from(new Set(equation.match(/[A-Z]/g))).sort();
-  }
-
-  static async getUniqueLeadingLetters(equation) {
-    const expressions = equation.split(/[-+=]/);
-
-    let uniqueLeadingLetters = new Set();
-    for (let i in expressions) {
-      uniqueLeadingLetters.add(expressions[i][0]);
-    }
-
-    return Array.from(uniqueLeadingLetters);
-  }
-
-  static async solve(equation, allowLeadingZero = true) {
+  solve(equation) {
     // Initialize an array to store valid solutions
     const solutions = [];
 
     // Extract unique letters from the equation. Example: "ADA + DI = DIA" => A,D,I
-    const uniqueLetters = await this.getUniqueLetters(equation);
+    const uniqueLetters = Array.from(new Set(equation.match(/[A-Z]/g))).sort();
 
-    const n = uniqueLetters.length;
+    const nUniqueLetters = uniqueLetters.length;
 
     // Check if there are more than 10 unique letters (not solvable)
-    if (n > 10) {
+    if (nUniqueLetters > 10) {
       return { error: "Not solvable because unique letters are more than 10" };
     }
 
-    // Extract unique leading letters (first letter in word). Example: "ADA + DI = DIA" => A,D
-    let uniqueLeadingLetters;
-    if (!allowLeadingZero) {
-      uniqueLeadingLetters = await this.getUniqueLeadingLetters(equation);
-    }
-
     // Generate permutations of digits for unique letters. Example for 3-letter equation: ["012", "123", ...]
-    const permutations = (await this.generatePermutations(n)).map((perm) =>
-      perm.join("")
-    );
+    const permutations = this.generatePermutations(nUniqueLetters);
 
     // Iterate over each permutation
-    permutationsLoop: for (let perm of permutations) {
+    for (let perm of permutations) {
       // Initialize an empty map object to store mappings from letters to digits
       const map = {};
 
       // Map each unique letter to a digit from the current permutation.
       // Example: {'A': "0", 'D': "1", 'I': "2"}
-      for (let i in perm.split("")) {
-        //Check if leading letter map to zero
-        if (perm[i] == 0 && !allowLeadingZero) {
-          if (uniqueLeadingLetters.includes(uniqueLetters[i])) {
-            continue permutationsLoop; //Skip iteration if so
-          }
-        }
-        map[uniqueLetters[i]] = perm[i];
-      }
+      perm.forEach((element, index) => {
+        map[uniqueLetters[index]] = element;
+      });
 
       // Substitute the equation with current mappings
       const substitutedEquation = equation
         .split("")
-        .map((char) => map[char] || char)
+        .map((char) => (map[char] !== undefined ? map[char] : char))
         .join("");
 
       // Split the substituted equation into left and right sides
       const [leftSide, rightSide] = substitutedEquation.split("=");
 
       // Evaluate and compare the left and right sides of the equation
-      if (mathjs.evaluate(leftSide) === mathjs.evaluate(rightSide)) {
+      if (evaluate(leftSide) === evaluate(rightSide)) {
         solutions.push(map); // Store the valid solution map
       }
     }
 
+    // Extract unique leading letters (first letter in word). Example: "ADA + DI = DIA" => A,D
+    const uniqueLeadingLetters = Array.from(
+      new Set(equation.split(/[-+=]/).map((word) => word[0]))
+    );
+
+    const noLeadingZeroSolutions = [];
+
+    outerLoop: for (let solution of solutions) {
+      for (let key in solution) {
+        if (uniqueLeadingLetters.includes(key) && solution[key] === 0) {
+          continue outerLoop;
+        }
+      }
+      noLeadingZeroSolutions.push(solution);
+    }
+
     // Return solutions
-    return { solutions };
+    return { solutions, noLeadingZeroSolutions };
   }
 }
 
-module.exports = CryptarihtmService;
+module.exports = CryptarithmService;

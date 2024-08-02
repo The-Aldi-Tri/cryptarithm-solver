@@ -9,7 +9,7 @@ const Solutions = ({ solutions, equation }) => {
   const substituteLetter = (string, map) => {
     return string
       .split("")
-      .map((char) => map[char] || char)
+      .map((char) => (map[char] !== undefined ? map[char] : char))
       .join("");
   };
 
@@ -54,7 +54,7 @@ const Solutions = ({ solutions, equation }) => {
         mt: "20px",
       }}
     >
-      <Grid container spacing={0.5}>
+      <Grid container spacing={1}>
         {solutions.length === 0 ? (
           <Grid item xs={12} sm={12}>
             <Typography align="center" sx={{ fontWeight: "bold" }}>

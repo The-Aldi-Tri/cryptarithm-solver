@@ -1,21 +1,18 @@
-const redis = require("redis");
+const { createClient } = require("redis");
 const config = require("../../configs/config");
 
+// Doc: https://www.npmjs.com/package/redis
 class CacheService {
   constructor(db = 0) {
-    this._client = redis.createClient({
+    this._client = createClient({
       url: `redis://${config.redis.host}:${config.redis.port}`,
     });
 
     this._client.on("error", (err) => {
-      console.error("Redis Client Error", err);
+      console.error("Redis Client Error:", err);
     });
 
-    this._client.on("connect", () => {
-      // console.log("Connected to Redis");
-    });
-
-    this._client.connect(); // Connect to Redis server
+    this._client.connect();
 
     this._client.select(db);
   }
@@ -36,6 +33,10 @@ class CacheService {
 
   async delete(key) {
     return this._client.del(key);
+  }
+
+  async close() {
+    await this._client.disconnect();
   }
 }
 

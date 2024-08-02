@@ -71,10 +71,12 @@ const Form = ({ setSolved, setSolutions, setEquation }) => {
 
         const response = await axios.post(
           "http://127.0.0.1:3001/cryptarithms",
-          { equation, allowLeadingZero }
+          { equation }
         );
         setSolved(true);
-        setSolutions(response.data.data?.solutions);
+        allowLeadingZero
+          ? setSolutions(response.data.data.solutions)
+          : setSolutions(response.data.data.noLeadingZeroSolutions);
         setEquation(equation);
       } catch (e) {
       } finally {

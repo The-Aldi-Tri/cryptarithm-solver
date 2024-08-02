@@ -9,7 +9,7 @@ describe("CacheService with real Redis connection", () => {
 
   afterAll(async () => {
     await cacheService._client.flushDb();
-    await cacheService._client.quit();
+    await cacheService.close();
   });
 
   it("should set a value in the cache without expiration", async () => {
