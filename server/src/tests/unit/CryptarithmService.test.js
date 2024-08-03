@@ -1,3 +1,4 @@
+const { describe, beforeAll, it, expect } = require("@jest/globals");
 const CryptarithmService = require("../../services/CryptarithmService");
 
 let cryptarithmService;

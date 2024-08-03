@@ -1,3 +1,4 @@
+const { describe, beforeAll, afterAll, it, expect } = require("@jest/globals");
 const CacheService = require("../../services/redis/CacheService");
 
 describe("CacheService with real Redis connection", () => {
