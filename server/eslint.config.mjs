@@ -9,12 +9,11 @@ export default tseslint.config(
   {
     languageOptions: {
       parserOptions: {
-        project: true,
-        tsconfigRootDir: import.meta.dirname,
+        project: './tsconfig.eslint.json',
       },
     },
   },
   {
-    ignores: ['jest.config.js', 'eslint.config.mjs', 'dist/'],
+    ignores: ['jest.config.js', 'eslint.config.mjs', 'dist/', 'node_modules/'],
   },
 );

@@ -43,6 +43,14 @@ class CacheService {
   async close() {
     await this._client.disconnect();
   }
+
+  async changeDb(db: number) {
+    await this._client.select(db);
+  }
+
+  async flushDb() {
+    await this._client.flushDb();
+  }
 }
 
 export default CacheService;

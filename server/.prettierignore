@@ -1,2 +1,5 @@
-# Ignore artifacts:
+# Compiled directories
 dist
+
+# Dependency directories
+node_modules/
