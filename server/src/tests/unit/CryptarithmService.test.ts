@@ -1,15 +1,15 @@
-const { describe, beforeAll, it, expect } = require("@jest/globals");
-const CryptarithmService = require("../../services/CryptarithmService");
+import { describe, beforeAll, it, expect } from '@jest/globals';
+import CryptarithmService from '../../services/CryptarithmService';
 
-let cryptarithmService;
+let cryptarithmService: CryptarithmService;
 
 beforeAll(() => {
   cryptarithmService = new CryptarithmService();
 });
 
-describe("Cryptarithm services - getPermutations", () => {
-  it("should return permutations with the correct number", () => {
-    function nPermutation(n, r) {
+describe('Cryptarithm services - getPermutations', () => {
+  it('should return permutations with the correct number', () => {
+    function nPermutation(n: number, r: number) {
       if (n < r) return -1;
 
       let result = n;
@@ -29,12 +29,12 @@ describe("Cryptarithm services - getPermutations", () => {
     expect(nPermutationActual).toEqual(nPermutationExpected);
   });
 
-  it("should return permutations without duplicate", () => {
+  it('should return permutations without duplicate', () => {
     for (let i = 1; i <= 10; i++) {
       const permutations = cryptarithmService.generatePermutations(i);
       const n = [];
       const uniqueN = [];
-      for (let perm of permutations) {
+      for (const perm of permutations) {
         n.push(perm.length);
         const unique = new Set(perm);
         uniqueN.push(unique.size);
@@ -44,18 +44,18 @@ describe("Cryptarithm services - getPermutations", () => {
   });
 });
 
-describe("Cryptarithm services - solve", () => {
-  it("should return not solvable when unique letters > 10", () => {
-    const equationString = "HELLO+WORLD=WONDERFULLY";
+describe('Cryptarithm services - solve', () => {
+  it('should return not solvable when unique letters > 10', () => {
+    const equationString = 'HELLO+WORLD=WONDERFULLY';
     const expectedOutput = {
-      error: "Not solvable because unique letters are more than 10",
+      error: 'Not solvable because unique letters are more than 10',
     };
     const result = cryptarithmService.solve(equationString);
     expect(result).toEqual(expectedOutput);
   });
 
-  it("should return correct solutions", () => {
-    const equationString = "SEND+MORE=MONEY";
+  it('should return correct solutions', () => {
+    const equationString = 'SEND+MORE=MONEY';
     const expectedOutput = {
       solutions: [
         { D: 1, E: 5, M: 0, N: 3, O: 8, R: 2, S: 7, Y: 6 },

@@ -1,17 +1,17 @@
-const express = require("express");
-const cors = require("cors");
-const helmet = require("helmet");
-const swaggerUi = require("swagger-ui-express");
-const swaggerSpec = require("./swagger");
+import express, { Application } from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './swagger';
 
 // Middlewares
-const apiLimiter = require("./middlewares/apiLimiter");
-const errorHandler = require("./middlewares/errorHandler");
+import apiLimiter from './middlewares/apiLimiter';
+import errorHandler from './middlewares/errorHandler';
 
 // Routes
-const cryptarithmRouter = require("./routes/cryptarithmsRoutes");
+import cryptarithmRouter from './routes/cryptarithmsRoutes';
 
-const app = express();
+const app: Application = express();
 
 // Request body parser using built-in
 app.use(express.json()); // Parse JSON bodies
@@ -31,20 +31,20 @@ app.use(cors());
 // }
 
 // Apply rate limit to api routes
-app.use("/cryptarithms", apiLimiter);
+app.use('/cryptarithms', apiLimiter);
 
 // Mount routes
 app.use(cryptarithmRouter);
 
 // Serve Swagger documentation
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Middleware to handle invalid/not defined routes
 app.use((req, res) => {
-  return res.status(404).json({ error: "Route not found" });
+  return res.status(404).json({ error: 'Route not found' });
 });
 
 // Handle errors
 app.use(errorHandler);
 
-module.exports = app;
+export default app;

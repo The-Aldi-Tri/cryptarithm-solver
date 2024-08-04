@@ -1,3 +1,15 @@
 {
-  "cSpell.words": ["Cryptarithm"]
+  "cSpell.words": [
+    "codepaths",
+    "Cryptarithm",
+    "cryptarithms",
+    "devcontainer",
+    "devcontainers",
+    "tsbuildinfo",
+    "tseslint"
+  ],
+  "jest.rootPath": "./server",
+  "jest.runMode": "on-demand",
+  "eslint.workingDirectories": ["./server"],
+  "eslint.useFlatConfig": true
 }

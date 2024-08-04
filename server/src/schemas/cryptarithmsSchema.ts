@@ -1,6 +1,6 @@
-const Joi = require("joi");
+import Joi from 'joi';
 
-let pattern =
+const pattern =
   /^([A-Z]+(?:\s*[+-]\s*[A-Z]+)*)(?:\s*=\s*([A-Z]+(?:\s*[+-]\s*[A-Z]+)*))?$/;
 /**
   Regex Breakdown
@@ -40,7 +40,7 @@ let pattern =
  */
 
 const cryptarithmPayloadSchema = Joi.object({
-  equation: Joi.string().pattern(pattern, "equation").required(),
+  equation: Joi.string().pattern(pattern, 'equation').required(),
 });
 
-module.exports = { cryptarithmPayloadSchema };
+export { cryptarithmPayloadSchema };

@@ -1,9 +1,20 @@
-import globals from "globals";
-import pluginJs from "@eslint/js";
+import eslint from '@eslint/js';
+import prettierConfig from 'eslint-config-prettier';
+import tseslint from 'typescript-eslint';
 
-
-export default [
-  {files: ["**/*.js"], languageOptions: {sourceType: "commonjs"}},
-  {languageOptions: { globals: globals.node }},
-  pluginJs.configs.recommended,
-];
+export default tseslint.config(
+  eslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
+  prettierConfig,
+  {
+    languageOptions: {
+      parserOptions: {
+        project: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  {
+    ignores: ['jest.config.js', 'eslint.config.mjs', 'dist/'],
+  },
+);

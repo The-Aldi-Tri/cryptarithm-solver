@@ -1,9 +1,8 @@
-const { Router } = require("express");
+import validatePayload from '../middlewares/validatePayload';
+import { cryptarithmPayloadSchema } from '../schemas/cryptarithmsSchema';
+import cryptarithmsController from '../controllers/cryptarithmsController';
+import { Router } from 'express';
 const cryptarithmRouter = Router();
-
-const validatePayload = require("../middlewares/validatePayload");
-const { cryptarithmPayloadSchema } = require("../schemas/cryptarithmsSchema");
-const cryptarithmsController = require("../controllers/cryptarithmsController");
 
 /**
  * @openapi
@@ -132,9 +131,9 @@ const cryptarithmsController = require("../controllers/cryptarithmsController");
  *              error: "Internal Server Error"
  */
 cryptarithmRouter.post(
-  "/cryptarithms",
+  '/cryptarithms',
   validatePayload(cryptarithmPayloadSchema),
-  cryptarithmsController.solve
+  cryptarithmsController.solve,
 );
 
-module.exports = cryptarithmRouter;
+export default cryptarithmRouter;
