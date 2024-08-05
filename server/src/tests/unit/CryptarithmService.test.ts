@@ -4,22 +4,22 @@ import CryptarithmService from '../../services/CryptarithmService';
 let cryptarithmService: CryptarithmService;
 
 beforeAll(() => {
-  cryptarithmService = new CryptarithmService();
+  cryptarithmService = CryptarithmService.getInstance();
 });
 
 describe('Cryptarithm services - getPermutations', () => {
   it('should return permutations with the correct number', () => {
-    function nPermutation(n: number, r: number) {
+    function nPermutation(n: number, r: number): number {
       if (n < r) return -1;
 
-      let result = n;
+      let result: number = n;
       for (let i = 1; i < r; i++) result *= n - i;
 
       return result;
     }
 
-    const nPermutationExpected = [];
-    const nPermutationActual = [];
+    const nPermutationExpected: number[] = [];
+    const nPermutationActual: number[] = [];
 
     for (let i = 1; i <= 10; i++) {
       nPermutationExpected.push(nPermutation(10, i));
@@ -32,8 +32,8 @@ describe('Cryptarithm services - getPermutations', () => {
   it('should return permutations without duplicate', () => {
     for (let i = 1; i <= 10; i++) {
       const permutations = cryptarithmService.generatePermutations(i);
-      const n = [];
-      const uniqueN = [];
+      const n: number[] = [];
+      const uniqueN: number[] = [];
       for (const perm of permutations) {
         n.push(perm.length);
         const unique = new Set(perm);

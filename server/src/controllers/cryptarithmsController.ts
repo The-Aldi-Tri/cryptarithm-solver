@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import asyncWrapper from '../utils/asyncWrapper';
-import {
-  cacheService,
-  cryptarithmService,
-} from '../services/instanceOfServices';
+import CacheService from '../services/redis/CacheService';
+import CryptarithmService from '../services/CryptarithmService';
 
-// Define the 'solve' function wrapped in asyncWrapper
+const cacheService = CacheService.getInstance();
+const cryptarithmService = CryptarithmService.getInstance();
+
 const solve = asyncWrapper(
   async (
     req: Request<unknown, unknown, { equation: string }>,
@@ -46,5 +46,4 @@ const solve = asyncWrapper(
   },
 );
 
-// Export 'solve' as a named export
 export default { solve };

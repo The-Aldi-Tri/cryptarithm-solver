@@ -14,6 +14,12 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ['jest.config.js', 'eslint.config.mjs', 'dist/', 'node_modules/'],
+    ignores: [
+      'jest.config.js',
+      'eslint.config.mjs',
+      'dist/',
+      'node_modules/',
+      'coverage/',
+    ],
   },
 );

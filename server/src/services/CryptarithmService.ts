@@ -14,7 +14,17 @@ interface SolveResultError {
 type SolveResult = SolveResultSuccess | SolveResultError;
 
 class CryptarithmService {
-  generatePermutations(n: number): number[][] {
+  private static instance: CryptarithmService;
+  private constructor() {}
+
+  public static getInstance() {
+    if (!CryptarithmService.instance) {
+      CryptarithmService.instance = new CryptarithmService();
+    }
+    return CryptarithmService.instance;
+  }
+
+  public generatePermutations(n: number): number[][] {
     const numbers = Array.from({ length: 10 }, (_, index) => index);
 
     // Helper function to generate permutations using Heap's algorithm
@@ -42,7 +52,7 @@ class CryptarithmService {
     return permute([], 0);
   }
 
-  solve(equation: string): SolveResult {
+  public solve(equation: string): SolveResult {
     const solutions: SolutionMap[] = [];
 
     // Extract unique letters from the equation
@@ -52,7 +62,7 @@ class CryptarithmService {
     const nUniqueLetters = uniqueLetters.length;
 
     // Check if there are more than 10 unique letters (not solvable)
-    if (nUniqueLetters > 10) {
+    if (nUniqueLetters > 10 || nUniqueLetters <= 0) {
       return { error: 'Not solvable because unique letters are more than 10' };
     }
 

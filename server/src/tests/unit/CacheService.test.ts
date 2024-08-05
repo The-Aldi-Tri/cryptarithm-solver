@@ -1,18 +1,20 @@
 import { describe, beforeAll, afterAll, it, expect } from '@jest/globals';
 import CacheService from '../../services/redis/CacheService';
 
+let cacheService: CacheService;
+
+beforeAll(async () => {
+  cacheService = CacheService.getInstance();
+  await cacheService.connect();
+  await cacheService.changeDb(6);
+});
+
+afterAll(async () => {
+  await cacheService.delete('testKey');
+  await cacheService.disconnect();
+});
+
 describe('CacheService with real Redis connection', () => {
-  let cacheService: CacheService;
-
-  beforeAll(() => {
-    cacheService = new CacheService(1);
-  });
-
-  afterAll(async () => {
-    await cacheService.delete('testKey');
-    await cacheService.close();
-  });
-
   it('should set a value in the cache without expiration', async () => {
     const key = 'testKey';
     const value = 'testValue';

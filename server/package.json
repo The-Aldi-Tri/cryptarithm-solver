@@ -9,7 +9,7 @@
     "lint": "npx eslint .",
     "format:check": "npx prettier . --check",
     "format:fix": "npx prettier . --write",
-    "test": "jest"
+    "test": "jest --verbose --coverage"
   },
   "author": "Aldi Tri M.",
   "license": "ISC",

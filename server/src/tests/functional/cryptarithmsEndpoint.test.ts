@@ -1,7 +1,8 @@
 import { describe, beforeAll, afterAll, it, expect } from '@jest/globals';
 import request from 'supertest';
 import app from '../../app';
-import { cacheService } from '../../services/instanceOfServices';
+import CacheService from '../../services/redis/CacheService';
+import http from 'http';
 
 type SolutionMap = { [key: string]: number };
 
@@ -16,19 +17,47 @@ interface responseError {
   error: string;
 }
 
+let cacheService: CacheService;
+let server: http.Server;
+
+beforeAll(async () => {
+  cacheService = CacheService.getInstance();
+  await cacheService.connect();
+  await cacheService.changeDb(6);
+  await cacheService.flushDb();
+
+  await new Promise<void>(
+    (resolve, reject) =>
+      (server = app.listen(3002, (err?: Error) => {
+        if (err) {
+          reject(err);
+        } else {
+          console.info('Test server started');
+          resolve();
+        }
+      })),
+  );
+});
+
+afterAll(async () => {
+  await cacheService.flushDb();
+  await cacheService.disconnect();
+
+  await new Promise<void>((resolve, reject) =>
+    server.close((err?: Error) => {
+      if (err) {
+        reject(err);
+      } else {
+        console.info('Test server closed');
+        resolve();
+      }
+    }),
+  );
+});
+
 describe('POST /cryptarithms', () => {
-  beforeAll(async () => {
-    await cacheService.changeDb(6);
-    await cacheService.flushDb();
-  });
-
-  afterAll(async () => {
-    await cacheService.flushDb();
-    await cacheService.close();
-  });
-
   it('should return a 422 status when payload is not provided', async () => {
-    const response = await request(app).post('/cryptarithms').send();
+    const response = await request(server).post('/cryptarithms').send();
 
     const body = response.body as responseError;
 
@@ -38,7 +67,7 @@ describe('POST /cryptarithms', () => {
 
   it('should return a 422 status when payload is in wrong format', async () => {
     const wrongPayload = { equation: 'SEND + MORE = MONEY $$$' };
-    const response = await request(app)
+    const response = await request(server)
       .post('/cryptarithms')
       .send(wrongPayload);
 
@@ -50,7 +79,7 @@ describe('POST /cryptarithms', () => {
 
   it('should return a 400 status when unique letter > 10', async () => {
     const wrongPayload = { equation: 'SENDXFT + MOREQERT = MONEYNHJK' };
-    const response = await request(app)
+    const response = await request(server)
       .post('/cryptarithms')
       .send(wrongPayload);
 
@@ -67,7 +96,7 @@ describe('POST /cryptarithms', () => {
     'should return a 200 status when payload is correct',
     async () => {
       const correctPayload = { equation: 'SEND + MORE = MONEY' };
-      const response = await request(app)
+      const response = await request(server)
         .post('/cryptarithms')
         .send(correctPayload);
 
@@ -82,7 +111,7 @@ describe('POST /cryptarithms', () => {
 
   it('should return a 200 status and fast response time when using cache', async () => {
     const correctPayload = { equation: 'SEND + MORE = MONEY' };
-    const response = await request(app)
+    const response = await request(server)
       .post('/cryptarithms')
       .send(correctPayload);
 
