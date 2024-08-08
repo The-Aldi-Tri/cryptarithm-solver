@@ -18,6 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import dotenv from "dotenv";
 
 const Form = ({ setSolved, setSolutions, setEquation }) => {
   const createAlphabeticSchema = (errorMessage) =>
@@ -70,7 +71,7 @@ const Form = ({ setSolved, setSolutions, setEquation }) => {
         }
 
         const response = await axios.post(
-          "http://127.0.0.1:3001/cryptarithms",
+          `${process.env.REACT_APP_API_URL}/cryptarithms`,
           { equation }
         );
         setSolved(true);

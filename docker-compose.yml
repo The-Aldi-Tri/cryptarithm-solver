@@ -1,0 +1,61 @@
+name: Cryptarithm-Solver-Web
+
+services:
+  redis:
+    container_name: redis
+    image: redis:7.4.0-alpine
+    volumes:
+      - ./docker/myredis/conf:/usr/local/etc/redis
+    netwotk:
+      - cryptarithm
+    expose:
+      - "6379"
+    restart: unless-stopped
+    command: "redis-server --maxmemory 100mb --maxmemory-policy allkeys-lfu"
+
+  server:
+    depends_on:
+      - redis
+    build:
+      context: server
+    container_name: server
+    env_file:
+      - .env
+    volumes:
+      - ./docker/server:/usr/src/app
+    networks:
+      - cryptarithm
+    expose:
+      - "3001"
+    restart: unless-stopped
+
+  client:
+    depends_on:
+      - server
+    build:
+      context: client
+    env_file:
+      - .env
+    container_name: client
+    volumes:
+      - ./docker/client:/usr/src/app
+    networks:
+      - cryptarithm
+
+  # nginx:
+  #   depends_on:
+  #     - client
+  #   image: 1.27.0-alpine
+  #   container_name: nginx
+  #   volumes:
+  #     - ./docker/client/build:/usr/share/nginx/html:ro
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   networks:
+  #     - cryptarithm
+  #   restart: unless-stopped
+
+networks:
+  cryptarithm:
+    driver: bridge
