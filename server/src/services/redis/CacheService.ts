@@ -1,5 +1,6 @@
 import { createClient, RedisClientType } from 'redis';
 import config from '../../configs/config';
+import logger from '../../logger';
 
 // Doc: https://www.npmjs.com/package/redis
 class CacheService {
@@ -12,7 +13,19 @@ class CacheService {
     });
 
     this.client.on('error', (err) => {
-      console.error('Redis Client Error:', err);
+      logger.error('Redis Client - An error has occurred:', err);
+    });
+    this.client.on('connect', () => {
+      logger.info('Redis Client - Initiating a connection to the server.');
+    });
+    this.client.on('ready', () => {
+      logger.info('Redis Client - Successfully connected and ready to use.');
+    });
+    this.client.on('end', () => {
+      logger.info('Redis Client - Connection has been closed.');
+    });
+    this.client.on('reconnecting', () => {
+      logger.warn('Redis Client - Trying to reconnect to the server.');
     });
   }
 

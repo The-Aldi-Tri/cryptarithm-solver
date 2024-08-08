@@ -1,58 +1,75 @@
 import app from './app';
 import config from './configs/config';
 import CacheService from './services/redis/CacheService';
+import logger from './logger';
+import { Server } from 'http';
 
 const cacheService = CacheService.getInstance();
+let server: Server;
 
-// Set redis connection
-cacheService
-  .connect()
-  .then(() => console.log('Successfully connected to Redis'))
-  .catch(() => console.error('Error when setting up redis connection'));
+const setupRedisConnection = async () => {
+  await cacheService.connect();
+};
 
-// Start Server
-const server = app.listen(config.app.port, config.app.host, () => {
-  console.info(
-    `Server is listening on http://${config.app.host}:${String(config.app.port)}`,
-  );
-});
+const startServer = () => {
+  server = app.listen(config.app.port, config.app.host, () => {
+    logger.info(
+      `Server is listening on http://${config.app.host}:${String(config.app.port)}`,
+    );
+  });
+};
+
+const startApp = async () => {
+  logger.info('Starting up app...');
+  await setupRedisConnection();
+  startServer();
+};
+
+void startApp();
+
+const stopServer = () => {
+  return new Promise<void>((resolve, reject) => {
+    server.close((err) => {
+      if (err) {
+        logger.error('Error closing server:', err);
+        return reject(err);
+      }
+      logger.info('Server closed.');
+      resolve();
+    });
+  });
+};
+
+const closeRedisConnection = async () => {
+  logger.info('Closing Redis connection...');
+  await cacheService.disconnect();
+};
 
 const shutdown = async () => {
-  console.log('Received shutdown signal. Closing server gracefully...');
-
-  try {
-    await new Promise<void>((resolve, reject) => {
-      server.close((err) => {
-        if (err) {
-          console.error('Error occurred while closing the server:', err);
-          reject(err);
-        } else {
-          console.log('All requests have been processed. Server closed.');
-          resolve();
-        }
-      });
-    });
-
-    await cacheService.disconnect();
-    console.log('Successfully disconnected from Redis');
-
-    console.log('Shutdown completed');
-    process.exit(0);
-  } catch (error) {
-    console.error('Shutdown failed:', error);
-    process.exit(1);
-  }
+  logger.info('Received shutdown signal. Closing app gracefully...');
+  await stopServer();
+  await closeRedisConnection();
 };
 
 process.on('SIGINT', () => {
-  shutdown().catch((error) => {
-    console.error('Unhandled error during shutdown:', error);
-    process.exit(1);
-  });
+  shutdown()
+    .then(() => {
+      logger.info('Shutdown success.');
+      process.exit(0);
+    })
+    .catch((error) => {
+      logger.error('Unhandled error during shutdown:', error);
+      process.exit(1);
+    });
 });
 process.on('SIGTERM', () => {
-  shutdown().catch((error) => {
-    console.error('Unhandled error during shutdown:', error);
-    process.exit(1);
-  });
+  shutdown()
+    .then(() => {
+      logger.info('Shutdown success.');
+      process.exit(0);
+    })
+    .catch((error) => {
+      logger.error('Unhandled error during shutdown:', error);
+      process.exit(1);
+    });
 });

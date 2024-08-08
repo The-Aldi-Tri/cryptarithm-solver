@@ -1,6 +1,11 @@
 # Compiled directories
 dist
-coverage
 
 # Dependency directories
-node_modules/
+node_modules
+
+# Logs
+logs
+
+# Test result
+coverage
