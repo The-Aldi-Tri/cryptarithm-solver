@@ -23,14 +23,6 @@ app.use(helmet());
 
 // Handle cross-origin requests
 app.use(cors());
-// if (process.env.NODE_ENV === "development") {
-//   app.use(
-//     cors({
-//       origin: ["http://localhost:3000"], // Allow requests from specific origin
-//       credentials: true, // Allow credentials (cookies, authorization headers)
-//     })
-//   );
-// }
 
 app.use(
   (req: express.Request<unknown, unknown, { equation: string }>, res, next) => {
@@ -52,7 +44,7 @@ app.use(
 );
 
 // Apply rate limit to api routes
-app.use('/cryptarithms', apiLimiter);
+app.use('/api/cryptarithms', apiLimiter);
 
 // Mount routes
 app.use(cryptarithmRouter);

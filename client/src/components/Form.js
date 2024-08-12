@@ -18,7 +18,6 @@ import {
   Typography,
 } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import dotenv from "dotenv";
 
 const Form = ({ setSolved, setSolutions, setEquation }) => {
   const createAlphabeticSchema = (errorMessage) =>

@@ -131,7 +131,7 @@ const cryptarithmRouter = Router();
  *              error: "Internal Server Error"
  */
 cryptarithmRouter.post(
-  '/cryptarithms',
+  '/api/cryptarithms',
   validatePayload(cryptarithmPayloadSchema),
   cryptarithmsController.solve,
 );

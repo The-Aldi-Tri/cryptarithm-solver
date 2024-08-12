@@ -55,9 +55,9 @@ afterAll(async () => {
   );
 });
 
-describe('POST /cryptarithms', () => {
+describe('POST /api/cryptarithms', () => {
   it('should return a 422 status when payload is not provided', async () => {
-    const response = await request(server).post('/cryptarithms').send();
+    const response = await request(server).post('/api/cryptarithms').send();
 
     const body = response.body as responseError;
 
@@ -68,7 +68,7 @@ describe('POST /cryptarithms', () => {
   it('should return a 422 status when payload is in wrong format', async () => {
     const wrongPayload = { equation: 'SEND + MORE = MONEY $$$' };
     const response = await request(server)
-      .post('/cryptarithms')
+      .post('/api/cryptarithms')
       .send(wrongPayload);
 
     const body = response.body as responseError;
@@ -80,7 +80,7 @@ describe('POST /cryptarithms', () => {
   it('should return a 400 status when unique letter > 10', async () => {
     const wrongPayload = { equation: 'SENDXFT + MOREQERT = MONEYNHJK' };
     const response = await request(server)
-      .post('/cryptarithms')
+      .post('/api/cryptarithms')
       .send(wrongPayload);
 
     const body = response.body as responseError;
@@ -97,7 +97,7 @@ describe('POST /cryptarithms', () => {
     async () => {
       const correctPayload = { equation: 'SEND + MORE = MONEY' };
       const response = await request(server)
-        .post('/cryptarithms')
+        .post('/api/cryptarithms')
         .send(correctPayload);
 
       const body = response.body as responseSuccess;
@@ -112,7 +112,7 @@ describe('POST /cryptarithms', () => {
   it('should return a 200 status and fast response time when using cache', async () => {
     const correctPayload = { equation: 'SEND + MORE = MONEY' };
     const response = await request(server)
-      .post('/cryptarithms')
+      .post('/api/cryptarithms')
       .send(correctPayload);
 
     const body = response.body as responseSuccess;

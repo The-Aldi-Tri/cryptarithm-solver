@@ -1,61 +1,53 @@
 name: Cryptarithm-Solver-Web
-
 services:
   redis:
     container_name: redis
     image: redis:7.4.0-alpine
     volumes:
-      - ./docker/myredis/conf:/usr/local/etc/redis
-    netwotk:
-      - cryptarithm
-    expose:
-      - "6379"
-    restart: unless-stopped
-    command: "redis-server --maxmemory 100mb --maxmemory-policy allkeys-lfu"
-
-  server:
-    depends_on:
-      - redis
-    build:
-      context: server
-    container_name: server
-    env_file:
-      - .env
-    volumes:
-      - ./docker/server:/usr/src/app
+      - redis:/data
     networks:
       - cryptarithm
-    expose:
-      - "3001"
+    command: "redis-server --maxmemory 100mb --maxmemory-policy allkeys-lfu"
+    restart: unless-stopped
+
+  server:
+    container_name: server
+    build:
+      context: ./server
+    depends_on:
+      - redis
+    env_file:
+      - ./server/.env
+    environment:
+      - HOST=0.0.0.0
+    networks:
+      - cryptarithm
     restart: unless-stopped
 
   client:
+    container_name: client
+    build:
+      context: ./client
     depends_on:
       - server
-    build:
-      context: client
-    env_file:
-      - .env
-    container_name: client
-    volumes:
-      - ./docker/client:/usr/src/app
     networks:
       - cryptarithm
+    restart: unless-stopped
 
-  # nginx:
-  #   depends_on:
-  #     - client
-  #   image: 1.27.0-alpine
-  #   container_name: nginx
-  #   volumes:
-  #     - ./docker/client/build:/usr/share/nginx/html:ro
-  #   ports:
-  #     - 80:80
-  #     - 443:443
-  #   networks:
-  #     - cryptarithm
-  #   restart: unless-stopped
+  proxy:
+    container_name: proxy
+    build:
+      context: ./proxy
+    depends_on:
+      - client
+    networks:
+      - cryptarithm
+    ports:
+      - 8080:80
+    restart: unless-stopped
+
+volumes:
+  redis:
 
 networks:
   cryptarithm:
-    driver: bridge
