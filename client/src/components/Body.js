@@ -74,26 +74,28 @@ const Body = () => {
             />
             <br />
             <br />
-            Unique letters: "D", "E", "M", "N", "O", "R", "S", "Y". ( sorted by
+            Unique letters: "D", "E", "M", "N", "O", "R", "S", "Y". (sorted by
             alphabetic)
             <br />
             <br />
             Possible solutions (Permutations):
-            <ul>
-              <li>
-                "D" = 0, "E" = 1, "M" = 2, "N" = 3, "O" = 4, "R" = 5, "S" = 6,
-                "Y" = 7
-              </li>
-              <li>
-                "D" = 0, "E" = 1, "M" = 2, "N" = 3, "O" = 4, "R" = 5, "S" = 6,
-                "Y" = 8
-              </li>
-              <li>
-                "D" = 0, "E" = 1, "M" = 2, "N" = 3, "O" = 4, "R" = 5, "S" = 6,
-                "Y" = 9
-              </li>
-              <li>....</li>
-            </ul>
+          </p>
+          <ul>
+            <li>
+              "D" = 0, "E" = 1, "M" = 2, "N" = 3, "O" = 4, "R" = 5, "S" = 6, "Y"
+              = 7
+            </li>
+            <li>
+              "D" = 0, "E" = 1, "M" = 2, "N" = 3, "O" = 4, "R" = 5, "S" = 6, "Y"
+              = 8
+            </li>
+            <li>
+              "D" = 0, "E" = 1, "M" = 2, "N" = 3, "O" = 4, "R" = 5, "S" = 6, "Y"
+              = 9
+            </li>
+            <li>....</li>
+          </ul>
+          <p>
             After trying all possible solutions, it will return the valid
             solutions that satisfy the given equation. For above example: "D"=
             7, "E"= 5, "M"= 1, "N"= 6, "O"= 0, "R"= 8, "S"= 9, "Y"= 2

@@ -6,7 +6,7 @@ const cryptarithmRouter = Router();
 
 /**
  * @openapi
- * '/cryptarithms':
+ * '/api/cryptarithms':
  *  post:
  *     tags:
  *     - Cryptarithms Controller
