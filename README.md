@@ -1,6 +1,6 @@
 # Cryptarithm Solver
 
-Live: <https:crypta.aldi-dev.online>
+Live: <https://crypta.aldi-dev.online>
 
 Preview:
 
