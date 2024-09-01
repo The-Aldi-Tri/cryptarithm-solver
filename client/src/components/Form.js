@@ -54,6 +54,7 @@ const Form = ({ setSolved, setSolutions, setEquation }) => {
     validationSchema: schema,
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true);
+      setSolved(false);
       try {
         const { allowLeadingZero, ...rest } = values;
         const equation = Object.values(rest).join(" ").toUpperCase();
@@ -79,6 +80,7 @@ const Form = ({ setSolved, setSolutions, setEquation }) => {
           : setSolutions(response.data.data.noLeadingZeroSolutions);
         setEquation(equation);
       } catch (e) {
+        setSolved(false);
       } finally {
         // Whether the submission was successful or not, always set submitting state back to false
         setSubmitting(false);
