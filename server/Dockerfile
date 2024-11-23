@@ -1,11 +1,11 @@
 # Stage 1: Build
-FROM node:22 AS builder
+FROM node:22.11.0 AS build
 
 # Create and set the working directory
 WORKDIR /usr/src/app
 
 # Install dependencies
-COPY package.json package-lock.json ./
+COPY package*.json ./
 RUN npm ci
 
 # Copy the rest of the application code
@@ -15,19 +15,19 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Production
-FROM node:22-alpine
+FROM node:22.11.0-alpine AS production
 
 # Create and set the working directory
 WORKDIR /usr/src/app
 
 # Install production dependencies
-COPY package.json package-lock.json ./
-RUN npm ci --only=production
+COPY package*.json ./
+RUN npm ci --omit=dev
 
 # Copy built files from the previous stage
-COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/dist ./dist
 
-COPY --from=builder /usr/src/app/.env ./dist
+EXPOSE 3000
 
 # Command to run the application
-CMD ["node", "dist/index.js"]
+CMD ["node", "./dist/index.js"]

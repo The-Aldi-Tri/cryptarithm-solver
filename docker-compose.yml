@@ -1,4 +1,4 @@
-name: Cryptarithm-Solver-Web
+name: Cryptarithm-Solver
 services:
   redis:
     container_name: redis
@@ -6,48 +6,38 @@ services:
     volumes:
       - redis:/data
     networks:
-      - cryptarithm
+      - cryptarithm-network
     command: "redis-server --maxmemory 100mb --maxmemory-policy allkeys-lfu"
-    restart: unless-stopped
+    # restart: always
 
   server:
     container_name: server
+    env_file: ./server/.env
     build:
       context: ./server
     depends_on:
       - redis
-    env_file:
-      - ./server/.env
-    environment:
-      - HOST=0.0.0.0
     networks:
-      - cryptarithm
-    restart: unless-stopped
+      - cryptarithm-network
+    ports:
+      - 3000:3000
+    # restart: always
 
   client:
     container_name: client
+    env_file: ./client/.env
     build:
       context: ./client
-    depends_on:
-      - server
+      args:
+        REACT_APP_API_URL: ${REACT_APP_API_URL:-http://127.0.0.1:3000/api}
     networks:
-      - cryptarithm
-    restart: unless-stopped
-
-  proxy:
-    container_name: proxy
-    build:
-      context: ./proxy
-    depends_on:
-      - client
-    networks:
-      - cryptarithm
+      - cryptarithm-network
     ports:
       - 8080:80
-    restart: unless-stopped
+    # restart: always
 
 volumes:
   redis:
 
 networks:
-  cryptarithm:
+  cryptarithm-network:

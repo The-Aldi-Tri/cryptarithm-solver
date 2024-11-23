@@ -21,7 +21,7 @@ interface Config {
 const config: Config = {
   app: {
     host: process.env.HOST ? process.env.HOST : '127.0.0.1',
-    port: process.env.PORT ? parseInt(process.env.PORT, 10) : 3001,
+    port: process.env.PORT ? parseInt(process.env.PORT, 10) : 3000,
   },
   redis: {
     host: process.env.REDIS_SERVER ? process.env.REDIS_SERVER : 'localhost',
