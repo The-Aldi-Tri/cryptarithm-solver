@@ -1,7 +1,5 @@
 # Cryptarithm Solver
 
-Live: <https://crypta.aldi-dev.online>
-
 Preview:
 
 ![preview before](preview-before.png)
